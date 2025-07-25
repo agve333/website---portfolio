@@ -116,74 +116,102 @@
       <p>Connect with me: gavilaptop@gmail.com</p>
     </footer>
   </div>
+<script>
+  const validUser = "admin";
+  const validPass = "letmein123";
 
-  <script>
-    const validUser = "admin";
-    const validPass = "letmein123"; // Admin account (plaintext)
+  // Hash function
+  async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  }
 
-    // Password hashing function (browser-side)
-    async function hashPassword(password) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(password);
-      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  // Toggle login/signup views
+  function toggleForms() {
+    const login = document.getElementById("login-section");
+    const signup = document.getElementById("signup-section");
+    login.style.display = login.style.display === "none" ? "block" : "none";
+    signup.style.display = signup.style.display === "none" ? "block" : "none";
+  }
+
+  // Check session on page load
+  window.addEventListener("load", () => {
+    const user = localStorage.getItem("loggedInUser");
+    if (user) {
+      showMainContent(user);
+    }
+  });
+
+  // Signup logic
+  document.getElementById("signupForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const newUser = document.getElementById("new-username").value;
+    const newPass = document.getElementById("new-password").value;
+
+    if (!newUser || !newPass) {
+      document.getElementById("signup-message").textContent = "Please enter both fields.";
+      return;
     }
 
-    // Toggle login/signup views
-    function toggleForms() {
-      const login = document.getElementById("login-section");
-      const signup = document.getElementById("signup-section");
-      login.style.display = login.style.display === "none" ? "block" : "none";
-      signup.style.display = signup.style.display === "none" ? "block" : "none";
+    const users = JSON.parse(localStorage.getItem("users") || {});
+
+    if (users[newUser]) {
+      document.getElementById("signup-message").textContent = "Username already exists.";
+      return;
     }
 
-    // Create new account
-    document.getElementById("signupForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      const newUser = document.getElementById("new-username").value;
-      const newPass = document.getElementById("new-password").value;
+    const hashed = await hashPassword(newPass);
+    users[newUser] = hashed;
+    localStorage.setItem("users", JSON.stringify(users));
+    document.getElementById("signup-message").textContent = "✅ Account created! You can now log in.";
+  });
 
-      if (!newUser || !newPass) {
-        document.getElementById("signup-message").textContent = "Please enter both fields.";
-        return;
-      }
+  // Login logic
+  document.getElementById("loginForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const u = document.getElementById("username").value;
+    const p = document.getElementById("password").value;
 
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
+    const users = JSON.parse(localStorage.getItem("users") || {});
+    const inputHash = await hashPassword(p);
 
-      if (users[newUser]) {
-        document.getElementById("signup-message").textContent = "Username already exists.";
-        return;
-      }
+    const isAdmin = u === validUser && p === validPass;
+    const isUser = users[u] && users[u] === inputHash;
 
-      const hashed = await hashPassword(newPass);
-      users[newUser] = hashed;
-      localStorage.setItem("users", JSON.stringify(users));
-      document.getElementById("signup-message").textContent = "✅ Account created! You can now log in.";
-    });
+    if (isAdmin || isUser) {
+      localStorage.setItem("loggedInUser", u);
+      showMainContent(u);
+    } else {
+      document.getElementById("message").textContent = "Access denied.";
+    }
+  });
 
-    // Login form submission
-    document.getElementById("loginForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      const u = document.getElementById("username").value;
-      const p = document.getElementById("password").value;
+  // Show main content and add logout button
+  function showMainContent(username) {
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("signup-section").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
 
-      const users = JSON.parse(localStorage.getItem("users") || {});
-      const inputHash = await hashPassword(p);
+    // Add logout button once
+    if (!document.getElementById("logout-btn")) {
+      const footer = document.querySelector("footer");
+      const logoutBtn = document.createElement("button");
+      logoutBtn.textContent = "Logout";
+      logoutBtn.id = "logout-btn";
+      logoutBtn.style.marginTop = "15px";
+      logoutBtn.onclick = () => {
+        localStorage.removeItem("loggedInUser");
+        location.reload();
+      };
+      footer.appendChild(logoutBtn);
+    }
+  }
+</script>
 
-      const isAdmin = u === validUser && p === validPass;
-      const isUser = users[u] && users[u] === inputHash;
-
-      if (isAdmin || isUser) {
-        document.getElementById("message").textContent = "Login successful!";
-        document.getElementById("login-section").style.display = "none";
-        document.getElementById("signup-section").style.display = "none";
-        document.getElementById("main-content").style.display = "block";
-      } else {
-        document.getElementById("message").textContent = "Access denied.";
-      }
-    });
-  </script>
+ 
 
 </body>
 </html>
