@@ -118,10 +118,8 @@
   </div>
 
   <script>
-    const validUser = "admin";
-    const validPass = "letmein123";
+    const API_URL = "http://127.0.0.1:5000";
 
-    // Toggle between login/signup
     function toggleForms() {
       const login = document.getElementById("login-section");
       const signup = document.getElementById("signup-section");
@@ -129,38 +127,34 @@
       signup.style.display = signup.style.display === "none" ? "block" : "none";
     }
 
-    // Save new account
-    document.getElementById("signupForm").addEventListener("submit", function (e) {
+    document.getElementById("signupForm").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const newUser = document.getElementById("new-username").value;
-      const newPass = document.getElementById("new-password").value;
+      const username = document.getElementById("new-username").value;
+      const password = document.getElementById("new-password").value;
 
-      if (!newUser || !newPass) {
-        document.getElementById("signup-message").textContent = "Please enter both fields.";
-        return;
-      }
+      const res = await fetch(`${API_URL}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
 
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
-
-      if (users[newUser]) {
-        document.getElementById("signup-message").textContent = "Username already exists.";
-        return;
-      }
-
-      users[newUser] = newPass;
-      localStorage.setItem("users", JSON.stringify(users));
-      document.getElementById("signup-message").textContent = "✅ Account created! You can now log in.";
+      const data = await res.json();
+      document.getElementById("signup-message").textContent = data.message;
     });
 
-    // Login logic
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
+    document.getElementById("loginForm").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const u = document.getElementById("username").value;
-      const p = document.getElementById("password").value;
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
 
-      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      const res = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
 
-      if ((u === validUser && p === validPass) || (users[u] && users[u] === p)) {
+      const data = await res.json();
+      if (data.success) {
         document.getElementById("message").textContent = "Login successful!";
         document.getElementById("login-section").style.display = "none";
         document.getElementById("signup-section").style.display = "none";
@@ -172,5 +166,3 @@
   </script>
 </body>
 </html>
-
-
