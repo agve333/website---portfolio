@@ -35,6 +35,37 @@
             <h3>Portfolio Website</h3>
         </div>
     </section>
+    <section>
+    <h2>Admin Login (Demo)</h2>
+    <div class="project">
+        <form id="loginForm">
+            <label>Username: <input type="text" id="username" /></label><br><br>
+            <label>Password: <input type="password" id="password" /></label><br><br>
+            <button type="submit">Login</button>
+        </form>
+
+        <p id="message"></p>
+    </div>
+</section>
+
+<script>
+    const validUser = "admin";
+    const validPass = "letmein123"; // We’ll hash this later
+
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const u = document.getElementById("username").value;
+        const p = document.getElementById("password").value;
+
+        if (u === validUser && p === validPass) {
+            document.getElementById("message").textContent = "Login successful! Root access granted.";
+        } else {
+            document.getElementById("message").textContent = "Access denied.";
+        }
+    });
+</script>
+
+
 
     <footer>
         <p>Connect with me: gavilaptop@gmail.com</p>
