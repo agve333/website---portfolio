@@ -84,7 +84,7 @@
     </div>
   </section>
 
-  <!-- 🌐 Hidden Main Content -->
+  <!-- 🌐 Main Site Content (Hidden by default) -->
   <div id="main-content" style="display: none;">
     <header>
       <h1>Gabriel</h1>
@@ -120,6 +120,7 @@
   <script>
     const API_URL = "http://127.0.0.1:5000";
 
+    // Toggle login/signup
     function toggleForms() {
       const login = document.getElementById("login-section");
       const signup = document.getElementById("signup-section");
@@ -127,33 +128,41 @@
       signup.style.display = signup.style.display === "none" ? "block" : "none";
     }
 
+    // Create new user
     document.getElementById("signupForm").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const username = document.getElementById("new-username").value;
-      const password = document.getElementById("new-password").value;
+      const newUser = document.getElementById("new-username").value;
+      const newPass = document.getElementById("new-password").value;
+
+      if (!newUser || !newPass) {
+        document.getElementById("signup-message").textContent = "Please enter both fields.";
+        return;
+      }
 
       const res = await fetch(`${API_URL}/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username: newUser, password: newPass })
       });
 
       const data = await res.json();
       document.getElementById("signup-message").textContent = data.message;
     });
 
+    // Login existing user
     document.getElementById("loginForm").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+      const u = document.getElementById("username").value;
+      const p = document.getElementById("password").value;
 
       const res = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username: u, password: p })
       });
 
       const data = await res.json();
+
       if (data.success) {
         document.getElementById("message").textContent = "Login successful!";
         document.getElementById("login-section").style.display = "none";
@@ -164,5 +173,6 @@
       }
     });
   </script>
+
 </body>
 </html>
