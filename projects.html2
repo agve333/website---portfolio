@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Projects</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #222;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      background: #444;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    section {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    .project {
+      background: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #222;
+      color: white;
+    }
+    #logout-btn {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Gabriel's Projects</h1>
+    <p>Cybersecurity & Software Development Portfolio</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="projects.html">Projects</a>
+  </nav>
+
+  <section>
+    <h2>Projects</h2>
+    <p>This page will soon feature detailed breakdowns of my past and current projects. Stay tuned!</p>
+
+    <!-- Example placeholder project -->
+    <div class="project">
+      <h3>🔧 Project 1: Coming Soon</h3>
+      <p>Description and tools used will appear here.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Connect with me: gavilaptop@gmail.com</p>
+  </footer>
+
+  <script>
+    // Optionally show logout if user is logged in
+    window.addEventListener("load", () => {
+      const user = localStorage.getItem("loggedInUser");
+      if (user) {
+        const footer = document.querySelector("footer");
+        const logoutBtn = document.createElement("button");
+        logoutBtn.textContent = "Logout";
+        logoutBtn.id = "logout-btn";
+        logoutBtn.onclick = () => {
+          localStorage.removeItem("loggedInUser");
+          window.location.href = "index.html";
+        };
+        footer.appendChild(logoutBtn);
+      }
+    });
+  </script>
+</body>
+</html>
