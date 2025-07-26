@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Projects</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #222;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      background: #444;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    section {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #222;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>My Projects</h1>
+    <p>Work in Progress</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="projects.html">Projects</a>
+  </nav>
+
+  <section>
+    <h2>Coming Soon...</h2>
+    <p>This page will showcase your past and current projects. Stay tuned!</p>
+  </section>
+
+  <footer>
+    <p>Contact: gavilaptop@gmail.com</p>
+  </footer>
+
+  <script>
+    // 🔐 Redirect to login if not logged in
+    const user = localStorage.getItem("loggedInUser");
+    if (!user) {
+      alert("You must be logged in to view this page.");
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+</html>
